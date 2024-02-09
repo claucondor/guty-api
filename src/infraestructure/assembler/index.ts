@@ -2,12 +2,14 @@ import { Express } from 'express';
 import { logger } from '../../utils/log';
 import { setExpressMiddlewares } from '../express';
 import d from './dependencies';
+import { MondayClient } from '../monday/client';
 
 export class Assembler {
   router: Express;
-
-  constructor(router: Express) {
+  mondayClient: MondayClient;
+  constructor(router: Express, mondayClient: MondayClient) {
     this.router = router;
+    this.mondayClient = mondayClient;
   }
 
   configureApp() {

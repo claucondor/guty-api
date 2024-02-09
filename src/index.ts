@@ -2,10 +2,13 @@ import { type Express } from 'express';
 import { Assembler } from './infraestructure/assembler';
 import { PORT, TAG } from './utils/consts';
 import { createRouter } from './infraestructure/express';
+import { MondayClient } from './infraestructure/monday/client';
+import { connectToMonday } from './infraestructure/monday';
 
 const router: Express = createRouter();
+const mondayClient: MondayClient = connectToMonday();
 
-const assembler = new Assembler(router);
+const assembler = new Assembler(router, mondayClient);
 assembler.configureApp();
 
 router.listen(PORT, () => {
