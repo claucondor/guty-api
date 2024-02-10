@@ -15,6 +15,7 @@ export class Assembler {
   configureApp() {
     setExpressMiddlewares(this.router);
     this.addTestRoutes();
+    this.addContractsRoutes();
     logger.info('clean architecture layers assembled correctly');
   }
 
@@ -24,5 +25,15 @@ export class Assembler {
   addTestRoutes() {
     const testControllert = new d.TestControllers();
     d.addTestRoutes(this.router, testControllert);
+  }
+
+  //
+  // addContractsRoutes
+  //
+  addContractsRoutes() {
+    const contractsController = new d.ContractController(
+      new d.ContractsUseCases(new d.ContractsRepository(this.mondayClient))
+    );
+    d.addContractsRoutes(this.router, contractsController);
   }
 }

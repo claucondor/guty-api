@@ -24,7 +24,7 @@ export class MondayClient {
     return response.data;
   }
 
-  async getBoardItems(boardId: number) {
+  async getBoardData(boardId: number) {
     const query = `query {
       boards(ids: ${boardId}) {
         items {

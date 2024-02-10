@@ -8,7 +8,7 @@ const CONTRACTS = 'contracts';
 const INFO = 'info';
 
 export function addContractsRoutes(router: Express, controllers: ContractController) {
-  logger.info('Test routes added');
+  logger.info('Contract routes added');
   const contractRouter = express();
 
   contractRouter.get(`/${INFO}`, (req: Request, res: Response) => {
