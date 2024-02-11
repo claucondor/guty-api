@@ -37,4 +37,45 @@ export class ContractController {
       });
     }
   }
+
+  async generateContract(req: Request, res: Response) {
+    const log = { ...logBase, function: 'generateContract' } as Log;
+
+    try {
+      //const { propertyId, buyerId, sellerId, purchaseId } = req.query;
+
+      const propertyId = '5952673706';
+      const buyerId = '5945935744';
+      const sellerId = '5945935744';
+      const purchaseId = '5945851814';
+
+      const contractBuffer = await this.contractUseCase.generateContract(
+        propertyId,
+        buyerId,
+        sellerId,
+        purchaseId
+      );
+
+      if (contractBuffer.length === 0) {
+        throw new Error('Failed to generate contract');
+      }
+
+      res.setHeader('Content-Disposition', `attachment; filename=contract_${propertyId}.docx`);
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      );
+      return res.send(contractBuffer);
+    } catch (err) {
+      const { status, message } = handleHttpError(err);
+
+      if (isAnInternalError(status)) {
+        logger.error(message, log);
+      }
+
+      return res.status(status).send({
+        error: message,
+      });
+    }
+  }
 }

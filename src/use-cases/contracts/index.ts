@@ -27,16 +27,21 @@ export class ContractsUseCases implements IContractsUseCases {
     return info;
   }
 
-  async generateContract(propertyId: string, buyerId: string, sellerId: string): Promise<boolean> {
+  async generateContract(
+    propertyId: string,
+    buyerId: string,
+    sellerId: string,
+    purchaseId: string
+  ): Promise<Buffer> {
     try {
       const propertyData = await this.contractRepository.getPropertyDataById(propertyId);
       const buyerData = await this.contractRepository.getClientDataById(buyerId);
       const sellerData = await this.contractRepository.getClientDataById(sellerId);
-      const purchaseData = await this.contractRepository.getPurchaseDataById(propertyId);
+      const purchaseData = await this.contractRepository.getPurchaseDataById(purchaseId);
 
       if (!propertyData || !buyerData || !sellerData || !purchaseData) {
         console.error(`Data not found`);
-        return false;
+        return Buffer.alloc(0);
       }
 
       const data = {
@@ -70,11 +75,11 @@ export class ContractsUseCases implements IContractsUseCases {
       doc.render();
 
       const output = doc.getZip().generate({ type: 'nodebuffer' });
-      fs.writeFileSync(path.resolve(__dirname, `../../output/contract_${propertyId}.docx`), output);
-      return true;
+      //fs.writeFileSync(path.resolve(__dirname, `../../output/contract_${propertyId}.docx`), output);
+      return output;
     } catch (error) {
       console.error(`Error generating contract: ${error}`);
-      return false;
+      return Buffer.alloc(0);
     }
   }
 }
