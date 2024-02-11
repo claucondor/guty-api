@@ -4,6 +4,9 @@ import { PORT, TAG } from './utils/consts';
 import { createRouter } from './infraestructure/express';
 import { MondayClient } from './infraestructure/monday/client';
 import { connectToMonday } from './infraestructure/monday';
+import { validateRequiredEnvs } from './infraestructure/env';
+
+validateRequiredEnvs();
 
 const router: Express = createRouter();
 const mondayClient: MondayClient = connectToMonday();
