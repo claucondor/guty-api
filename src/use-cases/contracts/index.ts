@@ -6,12 +6,12 @@ import path from 'path';
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 
-let templates = {
-  testTemplate: fs.readFileSync(
-    path.resolve(__dirname, '../../utils/templates/testTemplate.docx'),
-    'binary'
-  ),
-};
+//let templates = {
+//  testTemplate: fs.readFileSync(
+//    path.resolve(__dirname, '../../utils/s/test.docx'),
+//    'binary'
+//  ),
+//};
 
 export class ContractsUseCases implements IContractsUseCases {
   contractRepository: IContractsRepository;
