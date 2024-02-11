@@ -14,17 +14,46 @@ export class ContractsRepository implements IContractsRepository {
   }
 
   async getBoardInfo(): Promise<any> {
-    const board1 = await this.mondayClient.getBoardData(5945847430);
-    const propertyDataArray = parseItemsToPropertyData(board1.data.boards[0].items);
+    const propertyData = await this.getPropertyData();
+    const clienteData = await this.getClienteData();
+    const purchaseData = await this.getPurchaseData();
+
+    const info = {
+      propertyData: {
+        columns: Object.keys(propertyData[0] || {}),
+        entries: propertyData.length,
+      },
+      clienteData: {
+        columns: Object.keys(clienteData[0] || {}),
+        entries: clienteData.length,
+      },
+      purchaseData: {
+        columns: Object.keys(purchaseData[0] || {}),
+        entries: purchaseData.length,
+      },
+    };
+
+    return info;
+  }
+
+  async getPropertyData(): Promise<any> {
+    const board = await this.mondayClient.getBoardData(5945847430);
+    const propertyDataArray = parseItemsToPropertyData(board.data.boards[0].items);
     console.log(propertyDataArray);
+    return propertyDataArray;
+  }
 
-    const board2 = await this.mondayClient.getBoardData(5945933605);
-    const clienteDataArray = parseItemsToClienteData(board2.data.boards[0].items);
+  async getClienteData(): Promise<any> {
+    const board = await this.mondayClient.getBoardData(5945933605);
+    const clienteDataArray = parseItemsToClienteData(board.data.boards[0].items);
     console.log(clienteDataArray);
+    return clienteDataArray;
+  }
 
-    const board3 = await this.mondayClient.getBoardData(5945851807);
-    const purchaseDataArray = parseItemsToPurchaseData(board3.data.boards[0].items);
+  async getPurchaseData(): Promise<any> {
+    const board = await this.mondayClient.getBoardData(5945851807);
+    const purchaseDataArray = parseItemsToPurchaseData(board.data.boards[0].items);
     console.log(purchaseDataArray);
-    return;
+    return purchaseDataArray;
   }
 }
