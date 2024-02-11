@@ -1,4 +1,4 @@
-import { ClientData, PropertyData, PurchaseData } from '../../../entites';
+import { ClientData, PropertyData, PurchaseData } from '../../../../entites';
 
 function parseItemsToPropertyData(items: any[]): PropertyData[] {
   return items.map((item) => {

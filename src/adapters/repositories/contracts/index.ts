@@ -1,3 +1,4 @@
+import { ClientData, PropertyData, PurchaseData } from '../../../entites';
 import { MondayClient } from '../../../infraestructure/monday/client';
 import { IContractsRepository } from './interface';
 import {
@@ -13,9 +14,23 @@ export class ContractsRepository implements IContractsRepository {
     this.mondayClient = mondayClient;
   }
 
+  async logAllData(): Promise<void> {
+    try {
+      const propertyData = await this.getPropertyData();
+      const clientData = await this.getClientData();
+      const purchaseData = await this.getPurchaseData();
+
+      console.log('Property Data:', propertyData);
+      console.log('Client Data:', clientData);
+      console.log('Purchase Data:', purchaseData);
+    } catch (error) {
+      console.error(`Error logging data: ${error}`);
+    }
+  }
+
   async getBoardInfo(): Promise<any> {
     const propertyData = await this.getPropertyData();
-    const clienteData = await this.getClienteData();
+    const clienteData = await this.getClientData();
     const purchaseData = await this.getPurchaseData();
 
     const info = {
@@ -36,24 +51,36 @@ export class ContractsRepository implements IContractsRepository {
     return info;
   }
 
-  async getPropertyData(): Promise<any> {
+  async getPropertyData(): Promise<PropertyData[]> {
     const board = await this.mondayClient.getBoardData(5945847430);
     const propertyDataArray = parseItemsToPropertyData(board.data.boards[0].items);
-    console.log(propertyDataArray);
     return propertyDataArray;
   }
 
-  async getClienteData(): Promise<any> {
+  async getClientData(): Promise<ClientData[]> {
     const board = await this.mondayClient.getBoardData(5945933605);
     const clienteDataArray = parseItemsToClienteData(board.data.boards[0].items);
-    console.log(clienteDataArray);
     return clienteDataArray;
   }
 
-  async getPurchaseData(): Promise<any> {
+  async getPurchaseData(): Promise<PurchaseData[]> {
     const board = await this.mondayClient.getBoardData(5945851807);
     const purchaseDataArray = parseItemsToPurchaseData(board.data.boards[0].items);
-    console.log(purchaseDataArray);
     return purchaseDataArray;
+  }
+
+  async getClientDataById(id: string): Promise<ClientData | null> {
+    const clientData = await this.getClientData();
+    return clientData.find((client) => client.id === id) || null;
+  }
+
+  async getPurchaseDataById(id: string): Promise<PurchaseData | null> {
+    const purchaseData = await this.getPurchaseData();
+    return purchaseData.find((purchase) => purchase.id === id) || null;
+  }
+
+  async getPropertyDataById(id: string): Promise<PropertyData | null> {
+    const propertyData = await this.getPropertyData();
+    return propertyData.find((property) => property.id === id) || null;
   }
 }
