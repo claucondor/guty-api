@@ -1,5 +1,6 @@
 import { IContractsRepository } from '../../adapters/repositories/contracts/interface';
 import { IContractsUseCases } from './interface';
+import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 import PizZip from 'pizzip';
@@ -66,9 +67,12 @@ export class ContractsUseCases implements IContractsUseCases {
         sellerEmail: sellerData.email,
       };
 
-      const templatePath = path.resolve(__dirname, '../../utils/templates/testTemplate.docx');
-      const content = fs.readFileSync(templatePath, 'binary');
-      const zip = new PizZip(content);
+      //const templatePath = path.resolve(__dirname, '../../utils/templates/testTemplate.docx');
+      //const content = fs.readFileSync(templatePath, 'binary');
+
+      const templateURL = 'https://arweave.net/D4oqQ3iPivELw9UvD46T94X9qK0-OzfgCSHGtXrP8co';
+      const response = await axios.get(templateURL, { responseType: 'arraybuffer' });
+      const zip = new PizZip(response.data);
       const doc = new Docxtemplater().loadZip(zip);
 
       doc.setData(data);
